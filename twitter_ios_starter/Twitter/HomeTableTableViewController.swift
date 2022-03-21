@@ -15,12 +15,17 @@ class HomeTableTableViewController: UITableViewController {
     let myRefreshControl = UIRefreshControl()
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadTweets()
+       // self.loadTweets()
         
         
         myRefreshControl.addTarget(self, action: #selector(loadTweets), for: .valueChanged)
         tableView.refreshControl = myRefreshControl
 
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.loadTweets()
+        
     }
     @objc func loadTweets(){
         
@@ -75,7 +80,8 @@ class HomeTableTableViewController: UITableViewController {
         UserDefaults.standard.set(false, forKey: "userloggedIn")
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        tableView.rowHeight = 150
+        tableView.rowHeight = 190
+       // self.tableView.estimatedRowHeight = 150
         let cell = tableView.dequeueReusableCell(withIdentifier: "tweetCell", for: indexPath) as! TweetCellTableViewCell
         let user = tweetArray[indexPath.row]["user"] as! NSDictionary
         
@@ -86,6 +92,9 @@ class HomeTableTableViewController: UITableViewController {
         if let imageData = data{
             cell.profileImageView.image = UIImage(data: imageData)
         }
+        cell.setFavorite(tweetArray[indexPath.row]["favorited"] as! Bool)
+        cell.tweetId = tweetArray[indexPath.row]["id"] as! Int
+        cell.setRetweeted(tweetArray[indexPath.row]["retweeted"] as! Bool)
         return cell
     }
    
